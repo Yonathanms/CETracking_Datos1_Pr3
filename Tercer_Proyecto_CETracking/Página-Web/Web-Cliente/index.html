@@ -5,17 +5,23 @@
     <title>Web-Cliente</title>
   </head>
   <body>
-    
     <p>
       <center>
-        <h1>Centros de Distribución</h1>
+        <h1>Centros de Distribución</h1>  
       </center>
     </p>
     <canvas id="network" width="800" height="800" style="position: absolute; top: 0px; left: 0px; right: 0px; bottom: 0px; margin: auto; border:4px solid rgb(255, 0, 0);"></canvas>
+  
+    <button onclick ="reacomodar();"> Reorganizar centros de distribución </button> 
       
     <script src="https://d3js.org/d3.v7.min.js"></script>  
 
     <script>
+
+      //función que cmabia las posiciones de los nodos del grafo
+        function reacomodar() {
+          location.reload();
+        }
       
       
       // funciona para crear y darle un identificador a cada nodo 
