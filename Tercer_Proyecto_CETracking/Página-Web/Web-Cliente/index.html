@@ -10,7 +10,7 @@
         <h1>Centros de Distribución</h1>  
       </center>
     </p>
-    <canvas id="network" width="800" height="800" style="position: absolute; top: 0px; left: 0px; right: 0px; bottom: 0px; margin: auto; border:4px solid rgb(255, 0, 0);"></canvas>
+    <canvas id="network" width="850" height="850" style="position: absolute; top: 0px; left: 0px; right: 0px; bottom: 0px; margin: auto; border:4px solid rgb(255, 0, 0);"></canvas>
   
     <button onclick ="reacomodar();"> Reorganizar centros de distribución </button> 
       
@@ -23,19 +23,44 @@
           location.reload();
         }
       
-      
+      // funcion para mostrar nombres
+
+      var data = [
+
+      ]
       // funciona para crear y darle un identificador a cada nodo 
       var grafo = {
         nodos: [
           {nombre: "a"},
           {nombre: "b"},
+          {nombre: "c"},
+          {nombre: "d"},
+          {nombre: "f"},
+          {nombre: "h"},
+          {nombre: "i"},
+          {nombre: "j"},
+          {nombre: "k"},
+          {nombre: "l"},
+          {nombre: "m"},
+          {nombre: "n"},
+
+
         ],
 
         // da valor a las aristas e indica cual nodo conecta con cual 
         aristas: [
-          {source: "a", target: "b", weight: 34},
-          
-
+          {source: "a", target: "h", weight: 255},
+          {source: "b", target: "c", weight: 23},
+          {source: "c", target: "k", weight: 34},
+          {source: "d", target: "a", weight: 34},
+          {source: "f", target: "a", weight: 34},
+          {source: "h", target: "c", weight: 34},
+          {source: "i", target: "j", weight: 34},
+          {source: "j", target: "l", weight: 34},
+          {source: "k", target: "j", weight: 34},
+          {source: "l", target: "j", weight: 34},
+          {source: "m", target: "b", weight: 34},
+          {source: "n", target: "h", weight: 34},
           
         ]
       };
@@ -45,10 +70,17 @@
         width = canvas.attr("width"),
         height = canvas.attr("height"),
         ctx = canvas.node().getContext("2d"),
-        r = 10;
+        r = 20;
 
         // simulacion que permite ver las aristas
-        simulation = d3.forceSimulation().force("link", d3.forceLink().id(function(d) {return d.nombre;}));
+        simulation = d3.forceSimulation()
+        .force("collide", d3.forceCollide(r+2)) // Evita que los nodos esten encima de otros
+        .force("charge", d3.forceManyBody().strength(-2000)) //Separan  los nodos
+        .force("x", d3.forceX(width/2))
+        .force("y", d3.forceY(height/2))
+        .force("link", d3.forceLink()
+        .id(function(d) {return d.nombre;}))
+        .on("tick", update); //Crea una animación con los nodos
 
         simulation.nodes(grafo.nodos);
         simulation.force("link").links(grafo.aristas);
