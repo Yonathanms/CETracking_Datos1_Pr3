@@ -2,12 +2,75 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8">
-    <link rel="icon" href="/favicon.ico">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vite App</title>
+    <title>Grafo</title>
   </head>
   <body>
-    <div id="app"></div>
-    <script type="module" src="/src/main.js"></script>
+    
+    <h1>Representacion grafo</h1>
+    <canvas id="network" width="800" height="800"></canvas>
+      
+    <script src="https://d3js.org/d3.v7.min.js"></script>  
+
+    <script>
+      
+      
+      // funciona para crear y darle un identificador a cada nodo 
+      var grafo = {
+        nodos: [
+          {nombre: "a"},
+          {nombre: "b"},
+        ],
+
+        // da valor a las aristas e indica cual nodo conecta con cual 
+        aristas: [
+          {source: "a", target: "b", weight: 34},
+        
+          
+        ]
+      };
+
+      // genera el canva donde va a estar el grafo de forma grafica en la pagina
+      var canvas = d3.select("#network"),
+        width = canvas.attr("width"),
+        height = canvas.attr("height"),
+        ctx = canvas.node().getContext("2d"),
+        r = 10;
+
+        // simulacion que permite ver las aristas
+        simulation = d3.forceSimulation().force("link", d3.forceLink().id(function(d) {return d.nombre;}));
+
+        simulation.nodes(grafo.nodos);
+        simulation.force("link").links(grafo.aristas);
+
+      grafo.nodos.forEach(function (d) {
+        d.x = Math.random()*width;
+        d.y = Math.random()*height;
+      });
+      
+      function update() {
+        ctx.clearRect(0, 0, width, height);
+
+        ctx.beginPath();
+        grafo.aristas.forEach(drawLink);
+        ctx.stroke();
+
+        ctx.beginPath();
+        grafo.nodos.forEach(drawNode);
+        ctx.fill();
+      }
+      // dibuja los nodos  
+      function drawNode(d) {
+        ctx.moveTo(d.x , d.y);
+        ctx.arc(d.x, d.y, r, 0, Math.PI*2);
+      }
+
+      // dibuja las aristas 
+      function drawLink(l) {
+        ctx.moveTo(l.source.x , l.source.y);
+        ctx.lineTo(l.target.x , l.target.y);
+      }
+
+      update();
+      
+    </script>
   </body>
-</html>
